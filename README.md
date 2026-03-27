@@ -108,6 +108,6 @@ Do NOT use this for actual trading decisions.
 
 ## 👨‍💻 Author
 
-**Mahes**
-B.Tech 1st Year
-Connect on GitHub — github.com/yourusername
+Krishna Maheshwari
+B.Tech CSE (AI & ML)
+25BAI11074
