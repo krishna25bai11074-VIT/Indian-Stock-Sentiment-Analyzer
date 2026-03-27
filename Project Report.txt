@@ -1,0 +1,173 @@
+# Project Report — Indian Stock Price Predictor
+
+## 1. Problem Statement
+
+Stock markets are one of the most dynamic and complex systems in the
+world. Millions of Indians invest in the stock market every day, yet
+most retail investors have no data-driven way to make decisions.
+They rely on gut feeling, tips from friends, or news channels.
+
+This project attempts to solve a simple but meaningful question —
+**"Can we use a stock's past price data to predict where it will
+go tomorrow?"**
+
+---
+
+## 2. Why This Problem Matters
+
+- India has over 80 million retail stock market investors as of 2024
+- Most 1st time investors lose money due to lack of analysis
+- Even a simple directional prediction (Up or Down) can help
+  investors make better informed decisions
+- This is a real, observable problem in everyday Indian life
+
+---
+
+## 3. Dataset
+
+- **Source:** Yahoo Finance via the `yfinance` Python library
+- **Stocks:** Reliance Industries, TCS, Infosys, HDFC Bank, Tata Motors
+- **Time Period:** January 2023 — December 2024
+- **Size:** ~500 rows per stock (daily data)
+- **Features collected:** Date, Open, High, Low, Close, Volume
+
+No manual dataset download was needed — data was fetched
+programmatically using yfinance.
+
+---
+
+## 4. Approach
+
+### Step 1 — Data Collection (Notebook 1)
+Used `yfinance` to download 2 years of daily stock price data
+for 5 major Indian NSE stocks. Saved as CSV files for further
+processing.
+
+### Step 2 — EDA + Feature Engineering (Notebook 2)
+- Cleaned missing values and fixed date formats
+- Created new features:
+  - 5, 10, 20 day Moving Averages
+  - Daily price change
+  - Daily return percentage
+  - Day range (High - Low)
+  - Day of week
+- Created two target variables:
+  - Target Price (next day's closing price) — for regression
+  - Target Direction (Up=1 / Down=0) — for classification
+- Generated 3 visualization charts
+
+### Step 3 — Regression Model (Notebook 3)
+- Goal: Predict tomorrow's exact closing price
+- Models used: Linear Regression, Random Forest Regressor
+- Evaluation metrics: MAE, RMSE, R² Score
+- Split: 80% training, 20% testing (no shuffle — time series)
+
+### Step 4 — Classification Model (Notebook 4)
+- Goal: Predict if stock will go Up or Down tomorrow
+- Models used: Logistic Regression, Random Forest Classifier
+- Evaluation metrics: Accuracy, Confusion Matrix,
+  Classification Report
+- Split: 80% training, 20% testing (no shuffle — time series)
+
+---
+
+## 5. Key Decisions Made
+
+**Why no shuffling in train-test split?**
+Stock data is time-series data — future data cannot be used to
+predict past data. Shuffling would cause data leakage and give
+falsely high accuracy.
+
+**Why use two models for each task?**
+Comparing a simple model (Linear/Logistic Regression) with a
+complex one (Random Forest) shows the trade-off between
+simplicity and accuracy. This comparison adds depth to the
+analysis.
+
+**Why Moving Averages as features?**
+Moving averages are one of the most widely used indicators in
+technical analysis. Including them as features gives the model
+context about the stock's recent trend.
+
+---
+
+## 6. Results
+
+### Regression Results
+- Random Forest performed better than Linear Regression
+- The predicted vs actual price graph showed the model closely
+  follows the actual trend
+
+### Classification Results
+- Random Forest Classifier achieved higher accuracy than
+  Logistic Regression
+- ~55-65% accuracy is realistic and expected for stock
+  direction prediction
+- Even professional hedge funds consider 55%+ accuracy
+  profitable
+
+---
+
+## 7. Challenges Faced
+
+**Challenge 1 — KeyError: 'Date'**
+yfinance saves Date as the DataFrame index, not as a regular
+column. Fixed by using `reset_index()` and `rename()` to bring
+Date into the columns.
+
+**Challenge 2 — DateParseError**
+The newer version of yfinance saves data with a multi-level
+column header. Fixed by using `header=[0,1]` while reading the
+CSV and flattening the columns.
+
+**Challenge 3 — FileNotFoundError**
+Python was looking for the processed CSV in the wrong directory.
+Fixed by using `os.chdir()` to explicitly set the working
+directory at the top of each notebook.
+
+**Challenge 4 — Two Python versions conflict**
+Two Python installations on the same PC caused `yfinance` to be
+installed in one but not the other. Fixed by selecting the
+correct Python interpreter in VS Code.
+
+---
+
+## 8. Learnings
+
+- Learned how to fetch real financial data programmatically
+- Understood the difference between regression and classification
+- Learned why time-series data must not be shuffled
+- Understood the concept of feature engineering
+- Gained practical experience debugging real Python errors
+- Learned how to evaluate ML models beyond just accuracy
+
+---
+
+## 9. Future Scope
+
+- Add sentiment analysis of financial news as an additional feature
+- Include more technical indicators like RSI, MACD, Bollinger Bands
+- Build a simple web interface using Streamlit
+- Extend to predict 7-day or 30-day price trends
+- Include more Indian stocks from different sectors
+
+---
+
+## 10. Conclusion
+
+This project successfully demonstrates that machine learning can
+be applied to Indian stock market data to make meaningful
+predictions. While the model is not perfect — and no model ever
+is — it provides a solid data-driven foundation for understanding
+stock price movement. The project covers the full ML pipeline
+from data collection to model evaluation, making it a complete
+end-to-end Data Science project.
+
+---
+
+## References
+
+- Yahoo Finance API via yfinance library
+- NSE India — www.nseindia.com
+- Scikit-learn documentation — scikit-learn.org
+- Pandas documentation — pandas.pydata.org
